@@ -5,9 +5,7 @@ import tempfile
 from matplotlib import pyplot as plt
 
 
-KEY = (
-    {"key"}
-)  # Replace with a valid subscription key (keeping the quotes in place).
+KEY = open("apikey.ini").read()
 CF.Key.set(KEY)
 
 BASE_URL = (
