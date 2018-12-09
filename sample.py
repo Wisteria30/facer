@@ -2,8 +2,8 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 import time
-import datetime
 
 # options = Options()
 # options.add_argument("--headless")
@@ -32,28 +32,32 @@ for i in range(29):
         '//*[@id="wrap"]/article/div/div[3]/a[{}]'.format(i + 1)
     ).click()
     # スクロール下までしてリストを全て表示する
-    # actions = ActionChains(driver)
-    # scroll_class = driver.find_element_by_class_name("va-footer")
-    # actions.move_to_element(scroll_class)
-    # endTime = datetime.datetime.now() + datetime.timedelta(minutes=3)
-    # while True:
-    #     actions.perform()
-    #     if datetime.datetime.now() >= endTime:
-    #         break
-    # [actions.perform() for _ in range(5000)]
+    actions = ActionChains(driver)
+    scroll_class = driver.find_element_by_class_name("va-footer")
+    actions.move_to_element(scroll_class)
+    while True:
+        actions.perform()
+        entry_num = driver.find_elements_by_class_name("va-list-item__info")
+        print(len(entry_num))
+        if len(entry_num) >= member_num - 5:
+            break
     # お金を全てリストで取得
-    moneys = driver.find_elements_by_class_name("va-list-item-unit__number")
-    print("--------------------{}------------------------".format(len(moneys)))
+    print("--------------------{}------------------------".format(len(entry_num)))
     driver.find_element_by_xpath(
         '//*[@id="wrap"]/article/div/section/div[2]/div/a[1]'
-    ).click()
-    driver.find_element_by_xpath(
-        '//*[@id="wrap"]/div[8]/div[2]/div[2]/nav/div/ul/li[2]/a'
-    ).click()
-    money = driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div[2]/div[2]/div[2]/section/div/table/tbody/tr[3]/td/span').text
-    print(money)
-    driver.back()
-    driver.back()
+    ).send_keys(Keys.COMMAND, Keys.ENTER)
+    driver.switch_to.window(driver.window_handles[1])
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
+    # driver.find_element_by_xpath(
+    #     '//*[@id="wrap"]/div[8]/div[2]/div[2]/nav/div/ul/li[2]/a'
+    # ).click()
+    # money = driver.find_element_by_xpath(
+    #     '//*[@id="wrap"]/div[2]/div[2]/div[2]/div[2]/section/div/table/tbody/tr[3]/td/span'
+    # ).text
+    # print(money)
+    # driver.back()
+    # driver.back()
     # print([money.text for money in moneys])
     driver.back()
 print("finish!!!")

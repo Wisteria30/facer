@@ -2,7 +2,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 import time
 
 # options = Options()
@@ -32,16 +31,7 @@ def category_crawl(path):
         driver.find_element_by_xpath(
             '//*[@id="wrap"]/article/div/div[3]/a[{}]'.format(i + 1)
         ).click()
-        # スクロール下までしてリストを全て表示する
-        actions = ActionChains(driver)
-        scroll_class = driver.find_element_by_class_name("va-footer")
-        actions.move_to_element(scroll_class)
-        while True:
-            actions.perform()
-            entry_num = driver.find_elements_by_class_name("va-list-item__info")
-            if len(entry_num) >= member_num - 5:
-                break
-        member_crawl(entry_num)
+        member_crawl(member_num)
     print("finish!!!")
     # ドライバーを終了
     driver.close()
@@ -51,24 +41,25 @@ def category_crawl(path):
 def member_crawl(n):
     num = 1
     jscroll_added = 0
+    # actions = ActionChains(driver)
+    # scroll_class = driver.find_element_by_class_name("va-footer")
+    # actions.move_to_element(scroll_class)
+    # [actions.perform() for _ in range(500)]
     while n != num:
+        print("now div{}/div{} // {}".format(jscroll_added, num, n))
         # 0なら普通のX-PATH それ以外は addedのX-PATHをクリック
         if jscroll_added is 0:
             driver.find_element_by_xpath(
                 '//*[@id="wrap"]/article/div/section/div[2]/div/a[{}]'.format(num)
-            ).send_keys(Keys.COMMAND, Keys.ENTER)
+            )
         else:
             driver.find_element_by_xpath(
                 '//*[@id="wrap"]/article/div/section/div[2]/div/div[{}]/div/a[{}]'.format(
                     jscroll_added, num
                 )
-            ).send_keys(Keys.COMMAND, Keys.ENTER)
-        # タブの変更
-        driver.switch_to.window(driver.window_handles[1])
+            )
         # スクショ撮って保存
-        take_screenshot()
-        driver.close()
-        driver.switch_to.window(driver.window_handles[0])
+        # take_screenshot()
         # 20越えたらaddedのX-PATHの方へ
         if num is 20:
             num = 1
@@ -80,7 +71,7 @@ def member_crawl(n):
 
 
 def take_screenshot():
-    # スクリーンショット
+    # スクショ
     png = driver.find_element_by_xpath(
         '//*[@id="wrap"]/div[8]/div[2]/div[2]/div[1]/section[1]/div/div/span/span'
     ).screenshot_as_png
@@ -97,8 +88,9 @@ def take_screenshot():
     with open("./img/" + money + ".png", "wb") as f:
         f.write(png)
     print("export picture ./img/{}.png!!!!!".format(money))
+    # リンク一つ戻る
+    driver.back()
 
 
-if __name__ == "__main__":
-    # valuのカテゴリページ
-    category_crawl("https://valu.is/users/categories/")
+# valuのカテゴリページ
+category_crawl("https://valu.is/users/categories/")
