@@ -4,19 +4,21 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import time
+import os
+import random
 
 # headlessで使用する場合は以下の2行を利用する。
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-driver = webdriver.Chrome(options=options)
-# driver = webdriver.Chrome()
+# options = Options()
+# options.add_argument("--headless")
+# options.add_argument("--disable-gpu")
+# driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome()
 # ドライバが設定されるまでの待ち時間を設定する。
 driver.implicitly_wait(10)
 
 
 def category_crawl(path):
-    for i in range(29):
+    for i in range(1, 29):
         # トップ画面を開く
         print("open category {}/28".format(i))
         driver.get(path)
@@ -41,7 +43,8 @@ def category_crawl(path):
             entry_num = driver.find_elements_by_class_name("va-list-item__info")
             if len(entry_num) >= member_num - 5:
                 break
-        member_crawl(entry_num)
+        print(len(entry_num))
+        member_crawl(len(entry_num))
     print("finish!!!")
     # ドライバーを終了
     driver.close()
@@ -98,8 +101,12 @@ def take_screenshot():
         ).text
     money = money.replace("BTC", "")
     driver.back()
+    # 同一ファイル名が存在するか確認
+    filename = "./img/" + money + ".png"
+    if os.path.exists(filename):
+        filename = "./img/" + money + "__" + random.random() + ".png"
     # 画像を保存
-    with open("./img/" + money + ".png", "wb") as f:
+    with open(filename, "wb") as f:
         f.write(png)
     print("export picture ./img/{}.png!!!!!".format(money))
 
