@@ -5,12 +5,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import time
 
-# options = Options()
 # headlessで使用する場合は以下の2行を利用する。
-# options.add_argument("--headless")
-# options.add_argument("--disable-gpu")
-# driver = webdriver.Chrome(options=options)
-driver = webdriver.Chrome()
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--disable-gpu")
+driver = webdriver.Chrome(options=options)
+# driver = webdriver.Chrome()
 # ドライバが設定されるまでの待ち時間を設定する。
 driver.implicitly_wait(10)
 
@@ -67,7 +67,9 @@ def member_crawl(n):
         driver.switch_to.window(driver.window_handles[1])
         # スクショ撮って保存
         take_screenshot()
+        # タブの消滅
         driver.close()
+        # 元のタブに戻る
         driver.switch_to.window(driver.window_handles[0])
         # 20越えたらaddedのX-PATHの方へ
         if num is 20:
@@ -81,16 +83,19 @@ def member_crawl(n):
 
 def take_screenshot():
     # スクリーンショット
-    png = driver.find_element_by_xpath(
-        '//*[@id="wrap"]/div[8]/div[2]/div[2]/div[1]/section[1]/div/div/span/span'
+    png = driver.find_element_by_class_name(
+        "va-img-thumb-cropped__inner"
     ).screenshot_as_png
     # お金の金額を取る
-    driver.find_element_by_xpath(
-        '//*[@id="wrap"]/div[8]/div[2]/div[2]/nav/div/ul/li[2]/a'
-    ).click()
-    money = driver.find_element_by_xpath(
-        '//*[@id="wrap"]/div[2]/div[2]/div[2]/div[2]/section/div/table/tbody/tr[3]/td/span'
-    ).text
+    driver.find_element_by_link_text("データ").click()
+    try:
+        money = driver.find_element_by_xpath(
+            '//*[@id="wrap"]/div[2]/div[2]/div[2]/div[2]/section/div/table/tbody/tr[3]/td/span'
+        ).text
+    except:
+        money = driver.find_element_by_xpath(
+            '//*[@id="wrap"]/div[2]/div[3]/div[2]/div[2]/section/div/table/tbody/tr[3]/td/span'
+        ).text
     money = money.replace("BTC", "")
     driver.back()
     # 画像を保存
