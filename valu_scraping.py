@@ -18,7 +18,7 @@ driver.implicitly_wait(10)
 
 
 def category_crawl(path):
-    for i in range(1, 29):
+    for i in range(29):
         # トップ画面を開く
         print("open category {}/28".format(i))
         driver.get(path)
@@ -104,11 +104,11 @@ def take_screenshot():
     # 同一ファイル名が存在するか確認
     filename = "./img/" + money + ".png"
     if os.path.exists(filename):
-        filename = "./img/" + money + "__" + random.random() + ".png"
+        filename = "./img/" + money + "__" + str(random.random()) + ".png"
     # 画像を保存
     with open(filename, "wb") as f:
         f.write(png)
-    print("export picture ./img/{}.png!!!!!".format(money))
+    print("export picture ./img/{}.png!!!!!".format(filename))
 
 
 if __name__ == "__main__":
