@@ -13,9 +13,8 @@ driver = webdriver.Chrome()
 # ドライバが設定されるまでの待ち時間を設定する。
 driver.implicitly_wait(10)
 
-
 def category_crawl(path):
-    for i in range(28, 29):
+    for i in range(29):
         # トップ画面を開く
         print("open category {}/28".format(i))
         driver.get(path)
@@ -114,8 +113,8 @@ def take_screenshot():
     # 画像を保存
     with open(filename, "wb") as f:
         shutil.copyfileobj(res.raw, f)
-        # f.write(jpg)
     # print("export picture {}!!!!!".format(filename))
+    time.sleep(1)
 
 
 if __name__ == "__main__":
