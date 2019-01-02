@@ -1,6 +1,5 @@
 *.ini
 *.DS_Store
-img/
-*clip_face.py
-*detect_image.py
-*face_api_cut.py
+image/
+model/
+*.md
